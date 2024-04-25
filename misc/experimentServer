@@ -1,0 +1,23 @@
+# copied and modified from https://python-osc.readthedocs.io/en/latest/server.html
+
+from pythonosc.dispatcher import Dispatcher
+from pythonosc.osc_server import ThreadingOSCUDPServer
+
+
+def saving_perceived(address, *args):
+    print(args)
+
+
+def default_handler(address, *args):
+    print(f"DEFAULT {address}: {args}")
+
+
+dispatcher = Dispatcher()
+dispatcher.map("/saving/*", saving_perceived)
+dispatcher.set_default_handler(default_handler)
+
+ip = "127.0.0.1"
+port = 10004
+
+server = ThreadingOSCUDPServer((ip, port), dispatcher)
+server.serve_forever()  # Blocks forever
