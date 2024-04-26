@@ -1,0 +1,42 @@
+from pythonosc.osc_server import ThreadingOSCUDPServer
+from pythonosc.dispatcher import Dispatcher
+from pythonosc.udp_client import SimpleUDPClient
+import slab
+import os
+
+#Todo
+# 1. centrilize
+# 2. update with unreal info
+ip = "127.0.0.1"
+serverPort = 10004
+clientPort = 8001
+# print(os.getcwd())
+conditions = [entry for entry in os.listdir("signals") if ".wav" in entry]
+
+#update with unreal information
+# unrealAdress = None
+# value = None
+
+# global waiting
+# waiting = True
+
+global trialsequence
+trialsequence = slab.Trialsequence(conditions)
+
+dispatcher = Dispatcher()
+# global client
+# client = SimpleUDPClient(ip, clientPort)
+
+
+def saving_perceived(address, *args):
+    print(f"{address}: {args}")
+    if trialsequence.this_n < trialsequence.n_trials - 1:
+        print(trialsequence.__next__())
+    else:
+        # client.send_message(unrealAdress, value)
+        print("finished")
+
+dispatcher.map("/saving/*", saving_perceived)
+
+server = ThreadingOSCUDPServer((ip, serverPort), dispatcher)
+server.serve_forever()  # Blocks forever
