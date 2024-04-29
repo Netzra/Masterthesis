@@ -1,0 +1,20 @@
+from pythonosc.osc_server import ThreadingOSCUDPServer
+from pythonosc.dispatcher import Dispatcher
+import datetime
+
+dispatcher = Dispatcher()
+serverPort = 10004
+ip = "127.0.0.1"
+participant = "test"
+global filepath
+filepath = "results/" + participant + datetime.date.today().strftime("%Y%m%d") + datetime.datetime.now().strftime("%H%M")
+# filepath = "platzhalter"
+def saving_perceived(address, *args):
+    with open (filepath, "a") as resultsfile:
+        resultsfile.writelines(address+", "+ str(args)+"\n")
+        print (f"written: {args}")
+
+dispatcher.map("/saving/*", saving_perceived)
+
+server = ThreadingOSCUDPServer((ip, serverPort), dispatcher)
+server.serve_forever()
