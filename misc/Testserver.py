@@ -56,3 +56,34 @@ dispatcher.map("/saving/*", saving_perceived)
 dispatcher.map("/reroute/*", reroute_information)
 server = ThreadingOSCUDPServer((ip, serverPort), dispatcher)
 server.serve_forever()  # Blocks forever
+
+from pythonosc import udp_client
+
+# ignoring range prerequisits max: 3000 min:1000
+def pickingIACC (distance, divisor = 20):
+    return round(distance / divisor)
+
+def changeIACC (port, selection):
+    clientlate = udp_client.SimpleUDPClient("127.0.0.1", port)
+    clientlate.send_message("/pyBinSim_late_Filter",
+                            [0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             selection,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0,
+                             0.0
+                             ]
+                            )
+
+
+
