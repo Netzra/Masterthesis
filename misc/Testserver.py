@@ -59,31 +59,39 @@ server.serve_forever()  # Blocks forever
 
 from pythonosc import udp_client
 
+filternr = 1
+
+
 # ignoring range prerequisits max: 3000 min:1000
 def pickingIACC (distance, divisor = 20):
     return round(distance / divisor)
 
-def changeIACC (port, selection):
+def createPyBinSimFilterClient(port = 10002):
     clientlate = udp_client.SimpleUDPClient("127.0.0.1", port)
-    clientlate.send_message("/pyBinSim_late_Filter",
-                            [0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             selection,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0,
-                             0.0
-                             ]
-                            )
+    return clientlate
 
+def changeIACC (client, selection):
+    if filternr == pickingIACC(selection):
+        return
+    else:
+        client.send_message("/pyBinSim_late_Filter",
+                                [0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 selection,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0,
+                                 0.0
+                                 ]
+                                )
 
 
